@@ -72,7 +72,7 @@ nav a:hover{
 }
 
 .container{
-    max-width:1000px;
+    max-width:1200px;
     margin:0 auto;
     padding:40px 20px;
 }
@@ -181,6 +181,41 @@ nav a:hover{
     font-weight:normal;
 }
 
+.voice-selector{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-top:10px;
+}
+
+.voice-option{
+    display:flex;
+    align-items:center;
+    padding:8px;
+    background:#0F172A;
+    border:1px solid #334155;
+    border-radius:6px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.voice-option:hover{
+    background:#1a2744;
+    border-color:#3B82F6;
+}
+
+.voice-option input[type="radio"]{
+    margin-right:8px;
+    cursor:pointer;
+    accent-color:#3B82F6;
+}
+
+.voice-option label{
+    margin:0;
+    cursor:pointer;
+    font-size:0.9rem;
+}
+
 .btn-generate{
     width:100%;
     padding:15px;
@@ -210,7 +245,7 @@ nav a:hover{
     padding:30px;
     border-radius:15px;
     border:1px solid #334155;
-    max-height:600px;
+    max-height:800px;
     overflow-y:auto;
 }
 
@@ -289,17 +324,43 @@ nav a:hover{
     border-radius:8px;
     line-height:1.8;
     color:#CBD5E1;
-    max-height:400px;
+    max-height:300px;
     overflow-y:auto;
     font-size:0.95rem;
+    margin-bottom:15px;
 }
 
 .story-content p{
     margin-bottom:15px;
 }
 
-.btn-copy{
+.audio-player{
+    background:#0F172A;
+    padding:20px;
+    border-radius:8px;
+    margin-bottom:15px;
+}
+
+.audio-player h4{
+    color:#10B981;
+    margin-bottom:12px;
+    font-size:1rem;
+}
+
+.audio-player audio{
     width:100%;
+    margin-bottom:10px;
+    border-radius:5px;
+}
+
+.button-group{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-bottom:15px;
+}
+
+.btn-copy, .btn-download{
     padding:12px;
     background:#3B82F6;
     color:white;
@@ -308,11 +369,14 @@ nav a:hover{
     cursor:pointer;
     font-weight:bold;
     transition:0.3s;
-    margin-top:15px;
 }
 
-.btn-copy:hover{
+.btn-copy:hover, .btn-download:hover{
     opacity:0.9;
+}
+
+.btn-download{
+    background:#10B981;
 }
 
 .message{
@@ -373,7 +437,7 @@ footer{
         font-size:2rem;
     }
     
-    .checkbox-group{
+    .checkbox-group, .voice-selector{
         grid-template-columns:1fr;
     }
     
@@ -381,6 +445,16 @@ footer{
         flex-direction:column;
         gap:10px;
     }
+    
+    .button-group{
+        grid-template-columns:1fr;
+    }
+}
+
+.voice-description{
+    font-size:0.8rem;
+    color:#94A3B8;
+    margin-top:5px;
 }
 </style>
 </head>
@@ -403,11 +477,10 @@ footer{
 <div class="container">
 
     <div class="hero-section">
-        <h1>✨ AI Story Generator</h1>
+        <h1>✨ AI Story Generator with Voice</h1>
         <p>
-            Create unique stories set in Rabaul, Papua New Guinea during the 1994 eruption.
-            Fill in your preferences and let AI generate an original episode from the 
-            "Ashes & Spirits" universe.
+            Create unique stories set in Rabaul, Papua New Guinea during the 1994 eruption,
+            then automatically convert them to audio with natural-sounding voiceovers.
         </p>
     </div>
 
@@ -543,6 +616,37 @@ footer{
                     </select>
                 </div>
 
+                <!-- Voice Selection -->
+                <div class="form-group">
+                    <label>Narrator Voice *</label>
+                    <div class="voice-selector">
+                        <div class="voice-option">
+                            <input type="radio" id="voice-alloy" name="voiceType" value="alloy" checked>
+                            <label for="voice-alloy">Alloy - Clear, balanced</label>
+                        </div>
+                        <div class="voice-option">
+                            <input type="radio" id="voice-echo" name="voiceType" value="echo">
+                            <label for="voice-echo">Echo - Deep, resonant</label>
+                        </div>
+                        <div class="voice-option">
+                            <input type="radio" id="voice-fable" name="voiceType" value="fable">
+                            <label for="voice-fable">Fable - Warm, storytelling</label>
+                        </div>
+                        <div class="voice-option">
+                            <input type="radio" id="voice-nova" name="voiceType" value="nova">
+                            <label for="voice-nova">Nova - Bright, energetic</label>
+                        </div>
+                        <div class="voice-option">
+                            <input type="radio" id="voice-onyx" name="voiceType" value="onyx">
+                            <label for="voice-onyx">Onyx - Professional</label>
+                        </div>
+                        <div class="voice-option">
+                            <input type="radio" id="voice-shimmer" name="voiceType" value="shimmer">
+                            <label for="voice-shimmer">Shimmer - Friendly, warm</label>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Additional Details -->
                 <div class="form-group">
                     <label for="details">Additional Details or Plot Points (Optional)</label>
@@ -554,7 +658,7 @@ footer{
 
                 <!-- Generate Button -->
                 <button type="submit" class="btn-generate" id="generateBtn">
-                    Generate Story ✨
+                    ✨ Generate Story with Audio
                 </button>
 
             </form>
@@ -564,12 +668,12 @@ footer{
         <!-- OUTPUT SECTION -->
         <div class="output-section">
 
-            <h2>📖 Generated Story</h2>
+            <h2>📖 Generated Story & Audio</h2>
 
             <!-- Loading Spinner -->
             <div class="loading-spinner" id="loadingSpinner">
                 <div class="spinner"></div>
-                <div class="loading-text">Generating your story...</div>
+                <div class="loading-text">Generating your story and converting to audio...</div>
             </div>
 
             <!-- Story Output -->
@@ -583,25 +687,27 @@ footer{
                             <span id="outputSeasonEpisode">Season 1, Episode 1</span>
                         </div>
                         <div class="story-meta-item">
-                            <span class="story-meta-label">Characters:</span>
-                            <span id="outputCharacters">Character names</span>
-                        </div>
-                        <div class="story-meta-item">
-                            <span class="story-meta-label">Theme:</span>
-                            <span id="outputTheme">Theme</span>
-                        </div>
-                        <div class="story-meta-item">
-                            <span class="story-meta-label">Genre:</span>
-                            <span id="outputGenre">Genre</span>
+                            <span class="story-meta-label">Narrator:</span>
+                            <span id="outputVoice">Voice</span>
                         </div>
                     </div>
+                </div>
+
+                <!-- Audio Player -->
+                <div class="audio-player" id="audioPlayer">
+                    <h4>🎙️ Narrated Audio</h4>
+                    <audio id="audioElement" controls style="display:none;"></audio>
+                    <div id="audioLoadingMessage" style="color:#CBD5E1;">Loading audio...</div>
                 </div>
 
                 <div class="story-content" id="storyContent">
                     <!-- Generated story text will appear here -->
                 </div>
 
-                <button class="btn-copy" onclick="copyStory()">📋 Copy Story</button>
+                <div class="button-group">
+                    <button class="btn-copy" onclick="copyStory()">📋 Copy Story</button>
+                    <button class="btn-download" onclick="downloadAudio()">⬇️ Download Audio</button>
+                </div>
 
             </div>
 
@@ -615,6 +721,9 @@ footer{
         fictional and part of the "Ashes & Spirits" universe. While inspired by the real 1994 Rabaul 
         eruption in Papua New Guinea, all characters and specific incidents are creative creations. 
         These stories honor the real resilience and experiences of those affected by the actual event.
+        <br><br>
+        <strong>🎙️ Audio Generation:</strong> Narration is provided by OpenAI's text-to-speech technology.
+        Each story is automatically converted to natural-sounding audio using the selected narrator voice.
     </div>
 
 </div>
@@ -624,17 +733,10 @@ footer{
 </footer>
 
 <script>
-// Sample stories for demonstration (in production, these would be generated by AI)
-const sampleStories = {
-    "story1": {
-        title: "The Radio Operator",
-        text: `The crackling static filled Marcus Reid's ears like the pulse of a dying city. From his small communications tower overlooking Rabaul, he had been monitoring transmissions since dawn—routine reports from fishing vessels, weather updates from the meteorological station, chatter between government offices.\n\nBut something was different today.\n\nAt 6:15 AM, his instruments registered unusual electromagnetic interference. Not dangerous, just strange. The kind of anomaly that made his skin prickle with inexplicable unease. He'd been monitoring these readings for weeks now—ever since July when Joseph Mauri, the village elder everyone called superstitious, had warned of "the earth speaking."\n\nMarcus had dismissed him then. He was a man of science, of measurement and frequency and documented data. Spirits didn't show up on oscilloscopes.\n\nBut his oscilloscope was showing something now.\n\n"Control," he called into his microphone, following standard protocol. "This is Rabaul Communications Station, do you copy?"\n\nStatic answered him. Then a voice—not quite a voice, more like wind shaped into syllables—seemed to carry beneath the noise: "The mountain wakes. Listen. Listen. Listen."\n\nMarcus's hands trembled as he reached for the recording device. His fingers found the switch, and he pressed it down just as the first tremor began.\n\nThe ground beneath the communications tower started to shake. Not the gentle tremors they'd been experiencing all week. This was different. Deeper. Intentional.\n\nMarcus gripped the edge of his desk as coffee spilled across his logbook, the brown liquid obscuring weeks of his careful notes. Outside the tower window, he watched in horror as the peaceful morning fractured.\n\nIn the harbor, fishing boats began to toss in the water like toys. Near the docks, buildings trembled, their corrugated metal roofs rattling like drums. People emerged from homes, confused, searching the sky as if answers might be written there.\n\nThen—at 6:20 AM precisely—the mountain erupted.\n\nMarcus would later recall the exact moment: 6:20:47, recorded on his equipment. The instant when Mount Tavurvur literally split open, when thousands of tons of ash and rock were thrown into the sky at terrifying velocity. The moment when everything changed.\n\nThe communications tower swayed. Marcus held on, his eyes fixed on the volcano visible through the northern window. Ash began to rise. Just a plume at first, then a column, then an impossibility—a dark wall of particles climbing toward the stratosphere.\n\nHis radio crackled with dozens of panicked voices now, emergency protocols activating, officials trying to coordinate response from a city that was literally being erased in real-time.\n\nBut beneath all that panic, Marcus heard it again. That strange voice beneath the static, the one that had spoken just moments before the eruption:\n\n"The ancestor guides. The mountain releases. The people must move. Marcus will show them the way."\n\nMarcus's scientific skepticism shattered as completely as the volcanic rock now falling from the sky. His hands moved across his equipment with new purpose, coordinating rescues, relaying messages, becoming the voice that guided people from the chaos to safety.\n\nHe didn't fully understand what was happening. But he knew one thing with absolute certainty: something had spoken to him this morning. Something that lived in the electromagnetic hum of the world, in the frequency between science and mystery.\n\nAnd it had called him by name.`
-    },
-    "story2": {
-        title: "Ash Darkness",
-        text: `Elena Mora had treated burn wounds before in her nursing practice. She knew the color of damaged skin, the smell of singed hair, the particular way patients' eyes widened when they first understood the permanence of injury.\n\nBut nothing had prepared her for the ash.\n\nIt wasn't like fire. Fire was localized, contained, treatable. Fire burned one person, and you treated that person. You cleaned the wound, applied salve, wrapped it in clean bandages, and hoped for the best.\n\nBut ash—the volcanic ash that turned midday into midnight—it burned everyone at once. It came from the sky in suffocating clouds, turning the air itself into an abrasive substance that scraped lungs and skin with millions of microscopic cuts. It didn't discriminate. It didn't care if you were in a hospital or a fishing boat, in a home or on the street.\n\nElena was working in the emergency medical station near the harbor when it began. She'd been setting up a field hospital, organizing volunteer nurses, preparing for the evacuation of patients from the main hospital building—a building that, even now, seemed to be swaying beneath the force of the earthquake.\n\nShe had exactly fifteen seconds to wonder if evacuation was even possible before the sun vanished.\n\nIt happened all at once. One moment, patients were being carried out on stretchers, volunteers were moving with purposeful urgency, and there was still light—gray and strange, but light. The next moment, the world went black.\n\nNot night-black. Apocalypse-black. The kind of darkness that made your eyes search frantically for any hint of illumination, any proof that the world still existed beyond the thick curtain of ash.\n\nSomeone screamed. Elena couldn't tell if it was a patient or a volunteer. Her eyes were burning. The ash had gotten into every opening of her body—nostrils, mouth, under her eyelids—and it felt like breathing glass dust.\n\n"Stay together!" she heard herself shout, though her voice sounded strange and distant. "Everyone move toward the evacuation point! Hold hands if you have to! Don't separate!"\n\nShe grabbed the hand of the nearest person—a woman, Elena thought, though she couldn't see her in the impenetrable darkness. The woman's grip was bone-crushing, born of pure terror. Elena understood. She was terrified too.\n\nThey moved forward like a blind procession, hands linked, voices calling out to maintain contact. "Keep moving! Don't stop! Stay together!"\n\nElena's mind raced with medical concerns: patients with respiratory conditions would be in extreme danger; the elderly and very young would have difficulty breathing; anyone with asthma or heart problems needed immediate care. How many people were they going to lose to the darkness before they even reached the evacuation center?\n\nThen she felt it—a hand on her shoulder, not gripping in panic but resting there with purpose. Elena spun around, but could see nothing in the black.\n\n"This way," a voice said. Male, calm, with a quality she couldn't quite define. Ancient, maybe. Knowing. "The healing path. I will guide you."\n\nEvery rational part of Elena's brain knew she should be suspicious. They were in chaos, in disaster, and a stranger was offering to guide them in complete darkness. It could be someone with bad intentions. It could be anyone.\n\nBut her hands had stopped burning. Just slightly. And the air seemed to feel clearer when this stranger spoke.\n\nWithout fully understanding why, Elena squeezed the woman's hand. "Follow my lead," she said. "Someone's guiding us."\n\nThey turned left, and the path became easier. Not clear—still blind, still terrifying, still breathing ash with every gasping breath. But easier. As if something invisible was clearing a path through the chaos, directing them toward safety.\n\nThey walked for hours through that darkness—or perhaps only minutes; time had lost all meaning. When they finally emerged from the worst of the ash, when visibility returned enough to see shapes and shadows, Elena looked back to thank their mysterious guide.\n\nBut the hand on her shoulder was gone. There was no one there. Just ash, and darkness, and the terrible beauty of survival.\n\nIt wasn't until days later, when she was helping treat burn victims and respiratory casualties, that Elena began to understand. The hand on her shoulder hadn't healed her burning lungs, hadn't made the ash less abrasive or the darkness less terrifying.\n\nBut it had made her brave enough to guide others through it.\n\nAnd somehow, that was exactly what they needed.`
-    }
-};
+const API_URL = 'http://localhost:5000';
+
+let currentStoryData = null;
+let currentAudioUrl = null;
 
 function generateStory(event) {
     event.preventDefault();
@@ -646,14 +748,13 @@ function generateStory(event) {
     const theme = document.getElementById("theme").value;
     const supernatural = document.getElementById("supernatural").value;
     const wordCount = document.getElementById("wordCount").value;
+    const voiceType = document.querySelector('input[name="voiceType"]:checked').value;
 
-    // Validate inputs
     if (!title || !season || !episode || !mainCharacters || !theme || !supernatural || !wordCount) {
         showMessage("Please fill in all required fields.", "error");
         return;
     }
 
-    // Get selected story types
     const storyTypes = Array.from(document.querySelectorAll('input[name="storyType"]:checked'))
         .map(cb => cb.value);
 
@@ -662,56 +763,85 @@ function generateStory(event) {
         return;
     }
 
-    // Show loading spinner
+    const details = document.getElementById("details").value;
+
     document.getElementById("loadingSpinner").style.display = "block";
     document.getElementById("storyOutput").style.display = "none";
     document.getElementById("generateBtn").disabled = true;
     document.getElementById("generateBtn").textContent = "Generating...";
 
-    // Simulate API call (in production, this would call your backend)
-    setTimeout(() => {
-        displayStory(title, season, episode, mainCharacters, theme, storyTypes, supernatural, wordCount);
-    }, 2000);
+    const payload = {
+        title,
+        season: parseInt(season),
+        episode: parseInt(episode),
+        characters: mainCharacters,
+        theme,
+        storyTypes,
+        supernatural,
+        wordCount,
+        details,
+        voiceType
+    };
+
+    fetch(`${API_URL}/api/generate-story-with-audio`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(err => {
+                throw new Error(err.error || `Error: ${response.status}`);
+            });
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            currentStoryData = data.story;
+            currentAudioUrl = data.story.audioUrl;
+            displayStory(data.story);
+            showMessage("✓ Story and audio generated successfully!", "success");
+        } else {
+            throw new Error(data.error || 'Generation failed');
+        }
+    })
+    .catch(error => {
+        showMessage(`Error: ${error.message}`, "error");
+    })
+    .finally(() => {
+        document.getElementById("generateBtn").disabled = false;
+        document.getElementById("generateBtn").textContent = "✨ Generate Story with Audio";
+    });
 }
 
-function displayStory(title, season, episode, characters, theme, genres, supernatural, wordCount) {
-    // Use sample story for demonstration
-    const story = sampleStories["story1"]; // In production, use AI-generated story
-    
-    document.getElementById("outputTitle").textContent = title;
-    document.getElementById("outputSeasonEpisode").textContent = `Season ${season}, Episode ${episode}`;
-    document.getElementById("outputCharacters").textContent = characters;
-    document.getElementById("outputTheme").textContent = capitalizeTheme(theme);
-    document.getElementById("outputGenre").textContent = genres.map(g => capitalizeWord(g)).join(", ");
-    document.getElementById("storyContent").textContent = story.text;
+function displayStory(story) {
+    document.getElementById("outputTitle").textContent = story.title;
+    document.getElementById("outputSeasonEpisode").textContent = `Season ${story.season}, Episode ${story.episode}`;
+    document.getElementById("outputVoice").textContent = capitalizeWord(story.voiceUsed);
+    document.getElementById("storyContent").textContent = story.content;
 
-    // Hide loading, show output
+    const audioElement = document.getElementById("audioElement");
+    const audioLoadingMessage = document.getElementById("audioLoadingMessage");
+
+    audioElement.src = story.audioUrl;
+    audioLoadingMessage.style.display = 'block';
+    audioElement.style.display = 'none';
+    
+    audioElement.oncanplaythrough = () => {
+        audioLoadingMessage.style.display = 'none';
+        audioElement.style.display = 'block';
+    };
+
+    audioElement.onerror = () => {
+        audioLoadingMessage.textContent = '⚠️ Could not load audio. Ensure backend is running at ' + API_URL;
+    };
+
     document.getElementById("loadingSpinner").style.display = "none";
     document.getElementById("storyOutput").style.display = "block";
-
-    // Re-enable button
-    document.getElementById("generateBtn").disabled = false;
-    document.getElementById("generateBtn").textContent = "Generate Story ✨";
-
-    // Show success message
-    showMessage("✓ Story generated successfully! You can copy it or generate another.", "success");
-
-    // Scroll to output
     document.getElementById("storyOutput").scrollIntoView({ behavior: "smooth" });
-}
-
-function capitalizeTheme(theme) {
-    const themes = {
-        "hope": "Hope Amid Chaos",
-        "loss": "Dealing with Loss",
-        "connection": "Human Connection",
-        "transformation": "Personal Transformation",
-        "community": "Community Resilience",
-        "discovery": "Spiritual Discovery",
-        "redemption": "Redemption",
-        "love": "Love Across Boundaries"
-    };
-    return themes[theme] || theme;
 }
 
 function capitalizeWord(word) {
@@ -723,13 +853,14 @@ function showMessage(text, type) {
     messageEl.textContent = text;
     messageEl.className = `message ${type}`;
     
-    // Auto-hide after 5 seconds
     setTimeout(() => {
         messageEl.className = "message";
     }, 5000);
 }
 
 function copyStory() {
+    if (!currentStoryData) return;
+    
     const storyText = document.getElementById("storyContent").textContent;
     const title = document.getElementById("outputTitle").textContent;
     const seasonEpisode = document.getElementById("outputSeasonEpisode").textContent;
@@ -737,9 +868,24 @@ function copyStory() {
 
     navigator.clipboard.writeText(fullText).then(() => {
         showMessage("✓ Story copied to clipboard!", "success");
-    }).catch(err => {
-        showMessage("Failed to copy story. Try again.", "error");
+    }).catch(() => {
+        showMessage("Failed to copy story.", "error");
     });
+}
+
+function downloadAudio() {
+    if (!currentAudioUrl) {
+        showMessage("Audio not available yet.", "error");
+        return;
+    }
+
+    const link = document.createElement('a');
+    link.href = currentAudioUrl;
+    link.download = `story_S${currentStoryData.season}E${currentStoryData.episode}.mp3`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    showMessage("✓ Audio download started!", "success");
 }
 </script>
 
